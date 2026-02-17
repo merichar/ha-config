@@ -1,0 +1,6 @@
+i2c:
+  sda: GPIO26
+  scl: GPIO32
+  scan: false
+  frequency: 200kHz
+  id: i2c_grove

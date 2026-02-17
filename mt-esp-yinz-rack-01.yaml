@@ -1,0 +1,295 @@
+substitutions:
+  name: "mt-esp-yinz-rack-01"
+  friendly_name: "Yinz Rack ESP"
+  mac_address: !secret mac_address_yinz_rack_01
+  ip_address: "10.2.2.10" # for use_address name changes
+
+  m5stack_atom_button_KeyHeldDown_script: dummy_script
+  m5stack_atom_button_KeyReleased_script: dummy_script
+  m5stack_atom_button_KeyPressed_script: dummy_script
+  m5stack_atom_button_KeyPressed2x_script: dummy_script
+  m5stack_atom_button_KeyPressed3x_script: dummy_script
+
+packages:
+  device_m5stack-atom-echo: !include ./common/device/m5stack-atom-echo.yaml
+  device_m5stack-atom_i2c-grove: !include ./common/device/m5stack-atom_i2c-grove.yaml
+  common: !include ./common/common.yaml
+  net_wifi: !include ./common/net_wifi.yaml
+  # net_ethernet: !include ./common/net_ethernet.yaml
+
+esphome:
+  name: "${name}"
+  friendly_name: "${friendly_name}"
+
+# Enable Home Assistant API
+api:
+  encryption:
+    key: !secret api_key_yinz_rack_01
+  services:
+    - service: family_room_hdmi_matrix_power
+      then:
+        - remote_transmitter.transmit_nec:
+            transmitter_id: desk_hdmi_switch_ir_transmitter
+            address: 0xFF00
+            command: 0xE614
+    - service: family_room_hdmi_matrix_a_1
+      then:
+        - remote_transmitter.transmit_nec:
+            transmitter_id: desk_hdmi_switch_ir_transmitter
+            address: 0xFF00
+            command: 0xE619
+    - service: family_room_hdmi_matrix_a_2
+      then:
+        - remote_transmitter.transmit_nec:
+            transmitter_id: desk_hdmi_switch_ir_transmitter
+            address: 0xFF00
+            command: 0xE41B
+    - service: family_room_hdmi_matrix_a_3
+      then:
+        - remote_transmitter.transmit_nec:
+            transmitter_id: desk_hdmi_switch_ir_transmitter
+            address: 0xFF00
+            command: 0xE817
+    - service: family_room_hdmi_matrix_a_4
+      then:
+        - remote_transmitter.transmit_nec:
+            transmitter_id: desk_hdmi_switch_ir_transmitter
+            address: 0xFF00
+            command: 0xED12
+    - service: family_room_hdmi_matrix_b_1
+      then:
+        - remote_transmitter.transmit_nec:
+            transmitter_id: desk_hdmi_switch_ir_transmitter
+            address: 0xFF00
+            command: 0xEE11
+    - service: family_room_hdmi_matrix_b_2
+      then:
+        - remote_transmitter.transmit_nec:
+            transmitter_id: desk_hdmi_switch_ir_transmitter
+            address: 0xFF00
+            command: 0xEA15
+    - service: family_room_hdmi_matrix_b_3
+      then:
+        - remote_transmitter.transmit_nec:
+            transmitter_id: desk_hdmi_switch_ir_transmitter
+            address: 0xFF00
+            command: 0xA659
+    - service: family_room_hdmi_matrix_b_4
+      then:
+        - remote_transmitter.transmit_nec:
+            transmitter_id: desk_hdmi_switch_ir_transmitter
+            address: 0xFF00
+            command: 0xF708
+    - service: family_room_hdmi_matrix_arc
+      then:
+        - remote_transmitter.transmit_nec:
+            transmitter_id: desk_hdmi_switch_ir_transmitter
+            address: 0xFF00
+            command: 0xB847
+    - service: family_room_hdmi_matrix_headphones_spdif
+      then:
+        - remote_transmitter.transmit_nec:
+            transmitter_id: desk_hdmi_switch_ir_transmitter
+            address: 0xFF00
+            command: 0xF807
+    - service: family_room_hdmi_matrix_2ch_6ch
+      then:
+        - remote_transmitter.transmit_nec:
+            transmitter_id: desk_hdmi_switch_ir_transmitter
+            address: 0xFF00
+            command: 0xBF40
+    - service: family_room_hdmi_matrix_audio_copy
+      then:
+        - remote_transmitter.transmit_nec:
+            transmitter_id: desk_hdmi_switch_ir_transmitter
+            address: 0xFF00
+            command: 0xFD02
+    - service: family_room_yinz_rack_tv_power_on
+      then:
+        - remote_transmitter.transmit_nec:
+            transmitter_id: desk_hdmi_switch_ir_transmitter
+            address: 0x04FB
+            command: 0x2A
+        # - remote_transmitter.transmit_pronto:
+        #     data: "0000 006D 0022 0002 0157 00AC 0015 0016 0015 0016 0015 0041 0015 0016 0015 0016 0015 0016 0015 0016 0015 0016 0015 0041 0015 0041 0015 0016 0015 0041 0015 0041 0015 0041 0015 0041 0015 0041 0015 0016 0015 0041 0015 0016 0015 0041 0015 0016 0015 0041 0015 0016 0015 0016 0015 0041 0015 0016 0015 0041 0015 0016 0015 0041 0015 0016 0015 0041 0015 0041 0015 0689 0157 0056 0015 0E94"
+    - service: family_room_yinz_rack_tv_power_off
+      then:
+        - remote_transmitter.transmit_nec:
+            transmitter_id: desk_hdmi_switch_ir_transmitter
+            address: 0x04FB
+            command: 0x25
+        # - remote_transmitter.transmit_pronto:
+        #     data: "0000 006D 0022 0002 0157 00AC 0015 0016 0015 0016 0015 0041 0015 0016 0015 0016 0015 0016 0015 0016 0015 0016 0015 0041 0015 0041 0015 0016 0015 0041 0015 0041 0015 0041 0015 0041 0015 0041 0015 0041 0015 0016 0015 0041 0015 0016 0015 0016 0015 0041 0015 0016 0015 0016 0015 0016 0015 0041 0015 0016 0015 0041 0015 0041 0015 0016 0015 0041 0015 0041 0015 0689 0157 0056 0015 0E94"
+    - service: family_room_yinz_rack_tv_input_hdmi_1
+      then:
+        - remote_transmitter.transmit_nec:
+            transmitter_id: desk_hdmi_switch_ir_transmitter
+            address: 0x04FB
+            command: 0x81
+    - service: family_room_yinz_rack_tv_input_component_1
+      then:
+        - remote_transmitter.transmit_nec:
+            transmitter_id: desk_hdmi_switch_ir_transmitter
+            address: 0x04FB
+            command: 0x71
+    - service: family_room_yinz_rack_tv_input_rgb
+      then:
+        - remote_transmitter.transmit_nec:
+            transmitter_id: desk_hdmi_switch_ir_transmitter
+            address: 0x04FB
+            command: 0x98
+    - service: family_room_yinz_rack_tv_input_tv
+      then:
+        - remote_transmitter.transmit_nec:
+            transmitter_id: desk_hdmi_switch_ir_transmitter
+            address: 0x04FB
+            command: 0xD6
+    - service: family_room_yinz_rack_tv_volume_up
+      then:
+        - remote_transmitter.transmit_nec:
+            transmitter_id: desk_hdmi_switch_ir_transmitter
+            address: 0x04FB
+            command: 0x02
+    - service: family_room_yinz_rack_tv_volume_down
+      then:
+        - remote_transmitter.transmit_nec:
+            transmitter_id: desk_hdmi_switch_ir_transmitter
+            address: 0x04FB
+            command: 0x03
+    - service: family_room_yinz_rack_tv_mute_on
+      then:
+        - remote_transmitter.transmit_nec:
+            transmitter_id: desk_hdmi_switch_ir_transmitter
+            address: 0x04FB
+            command: 0x20
+    - service: family_room_yinz_rack_tv_mute_off
+      then:
+        - remote_transmitter.transmit_nec:
+            transmitter_id: desk_hdmi_switch_ir_transmitter
+            address: 0x04FB
+            command: 0x21
+    - service: family_room_projector_power_toggle
+      then:
+        - remote_transmitter.transmit_nec:
+            transmitter_id: desk_hdmi_switch_ir_transmitter
+            address: 0x57B8
+            command: 0xF30C
+    - service: family_room_projector_power_toggle_twice
+      then:
+        - remote_transmitter.transmit_nec:
+            transmitter_id: desk_hdmi_switch_ir_transmitter
+            address: 0x57B8
+            command: 0xF30C
+        - delay: 1s
+        - remote_transmitter.transmit_nec:
+            transmitter_id: desk_hdmi_switch_ir_transmitter
+            address: 0x57B8
+            command: 0xF30C
+    - service: family_room_projector_mute
+      then:
+        - remote_transmitter.transmit_nec:
+            transmitter_id: desk_hdmi_switch_ir_transmitter
+            address: 0x57B8
+            command: 0xF20D
+    - service: family_room_projector_aspect
+      then:
+        - remote_transmitter.transmit_nec:
+            transmitter_id: desk_hdmi_switch_ir_transmitter
+            address: 0x57B8
+            command: 0xE31C
+    - service: family_room_projector_home_play
+      then:
+        - remote_transmitter.transmit_nec:
+            transmitter_id: desk_hdmi_switch_ir_transmitter
+            address: 0x57B8
+            command: 0xE718
+    - service: family_room_projector_brightness
+      then:
+        - remote_transmitter.transmit_nec:
+            transmitter_id: desk_hdmi_switch_ir_transmitter
+            address: 0x57B8
+            command: 0xE21D
+    - service: family_room_projector_arrow_up
+      then:
+        - remote_transmitter.transmit_nec:
+            transmitter_id: desk_hdmi_switch_ir_transmitter
+            address: 0x57B8
+            command: 0xEF10
+    - service: family_room_projector_arrow_left
+      then:
+        - remote_transmitter.transmit_nec:
+            transmitter_id: desk_hdmi_switch_ir_transmitter
+            address: 0x57B8
+            command: 0xEE11
+    - service: family_room_projector_arrow_right
+      then:
+        - remote_transmitter.transmit_nec:
+            transmitter_id: desk_hdmi_switch_ir_transmitter
+            address: 0x57B8
+            command: 0xEC13
+    - service: family_room_projector_arrow_down
+      then:
+        - remote_transmitter.transmit_nec:
+            transmitter_id: desk_hdmi_switch_ir_transmitter
+            address: 0x57B8
+            command: 0xEB14
+    - service: family_room_projector_ok
+      then:
+        - remote_transmitter.transmit_nec:
+            transmitter_id: desk_hdmi_switch_ir_transmitter
+            address: 0x57B8
+            command: 0xED12
+    - service: family_room_projector_source
+      then:
+        - remote_transmitter.transmit_nec:
+            transmitter_id: desk_hdmi_switch_ir_transmitter
+            address: 0x57B8
+            command: 0xF10E
+    - service: family_room_projector_menu
+      then:
+        - remote_transmitter.transmit_nec:
+            transmitter_id: desk_hdmi_switch_ir_transmitter
+            address: 0x57B8
+            command: 0xE916
+    - service: family_room_projector_return
+      then:
+        - remote_transmitter.transmit_nec:
+            transmitter_id: desk_hdmi_switch_ir_transmitter
+            address: 0x57B8
+            command: 0xE817
+    - service: family_room_projector_volume_down
+      then:
+        - remote_transmitter.transmit_nec:
+            transmitter_id: desk_hdmi_switch_ir_transmitter
+            address: 0x57B8
+            command: 0xE11E
+    - service: family_room_projector_volume_up
+      then:
+        - remote_transmitter.transmit_nec:
+            transmitter_id: desk_hdmi_switch_ir_transmitter
+            address: 0x57B8
+            command: 0xE01F
+    - service: family_room_tetris_tv_power_on
+      then:
+        - remote_transmitter.transmit_samsung:
+            transmitter_id: desk_hdmi_switch_ir_transmitter
+            data: 0xE0E09966
+    - service: family_room_tetris_tv_power_off
+      then:
+        - remote_transmitter.transmit_samsung:
+            transmitter_id: desk_hdmi_switch_ir_transmitter
+            data: 0xE0E019E6
+    - service: family_room_tetris_tv_power_toggle
+      then:
+        - remote_transmitter.transmit_samsung:
+            transmitter_id: desk_hdmi_switch_ir_transmitter
+            data: 0xE0E040BF
+
+ota:
+  - platform: esphome
+    password: !secret ota_password_yinz_rack_01
+
+remote_transmitter:
+  id: desk_hdmi_switch_ir_transmitter
+  pin: GPIO21
+  carrier_duty_percent: 50%

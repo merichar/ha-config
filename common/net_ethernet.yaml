@@ -1,0 +1,8 @@
+ethernet:
+  use_address: ${ip_address}
+  domain: !secret ethernet_domain
+
+text_sensor:
+  - platform: ethernet_info
+    ip_address:
+      name: "IP Address"

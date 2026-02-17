@@ -1,0 +1,31 @@
+logger:
+
+time:
+  - platform: sntp
+    id: sntp_time
+    timezone: !secret ntp_timezone
+    servers:
+    - !secret ntp_address
+
+binary_sensor:
+  - platform: status
+    name: "Status"
+
+text_sensor:
+  - platform: version
+    name: "ESPHome Version"
+
+sensor:
+  - platform: uptime
+    name: "Uptime"
+
+button:
+  - platform: restart
+    name: "Restart"
+  - platform: safe_mode
+    name: "Safe Mode Boot"
+    entity_category: diagnostic
+
+script:
+  - id: dummy_script
+    then: []
