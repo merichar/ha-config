@@ -5,9 +5,9 @@ substitutions:
   ip_address: "10.2.2.60" # for use_address name changes
 
 packages:
-  common: !include ./common/common.yaml
-  net_wifi: !include ./common/net_wifi.yaml
-  # net_ethernet: !include ./common/net_ethernet.yaml
+  common: !include ./common/base.yaml
+  net_wifi: !include ./common/net/wifi.yaml
+  # net_ethernet: !include ./common/net/ethernet.yaml
 
 esphome:
   name: "${name}"
