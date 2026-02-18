@@ -1,6 +1,26 @@
-.esphome/
+automations.yaml
+scenes.yaml
+scripts.yaml
+blueprints/
+*.db
+*.db-shm
+*.db-wal
+.storage/
+*.log
+*.log.*
+tts/
+backups/
+tmp/
+deps/
+__pycache__/
+*.old
+frigate.yml
+*.august.conf
+.ha_run.lock
+.cloud/
+
+# Secrets
 secrets.yaml
 
+# OS
 .DS_Store
-*.log
-tmp/

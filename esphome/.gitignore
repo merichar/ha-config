@@ -1,0 +1,6 @@
+.esphome/
+secrets.yaml
+
+.DS_Store
+*.log
+tmp/
