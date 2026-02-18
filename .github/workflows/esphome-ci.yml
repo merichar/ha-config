@@ -1,0 +1,54 @@
+name: "ESPHome: Validate & Compile"
+
+on:
+  push:
+    branches: [main]
+    paths: ['esphome/**']
+  pull_request:
+    branches: [main]
+    paths: ['esphome/**']
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: esphome
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install ESPHome
+        run: pip install esphome
+
+      - name: Merge CI secrets
+        run: find ci/secrets -name '*.yaml' | sort | xargs cat > secrets.yaml
+
+      - name: Validate configs
+        run: |
+          exit_code=0
+          for file in *.yaml; do
+            [ "$file" = "secrets.yaml" ] && continue
+            echo "::group::Validating $file"
+            if ! esphome config "$file"; then
+              exit_code=1
+            fi
+            echo "::endgroup::"
+          done
+          exit $exit_code
+
+      - name: Compile configs
+        run: |
+          exit_code=0
+          for file in *.yaml; do
+            [ "$file" = "secrets.yaml" ] && continue
+            echo "::group::Compiling $file"
+            if ! esphome compile "$file"; then
+              exit_code=1
+            fi
+            echo "::endgroup::"
+          done
+          exit $exit_code
