@@ -1,0 +1,74 @@
+# Loads default set of integrations. Do not remove.
+default_config:
+
+recorder:
+  db_url: !secret db_url
+
+http:
+  use_x_forwarded_for: true
+  trusted_proxies:
+    - 172.30.33.0/24
+    - 10.1.1.2
+  ip_ban_enabled: true
+  login_attempts_threshold: 5
+  cors_allowed_origins: 
+    - https://hass.par.bar:65415
+    - https://hass.par.bar
+    - http://10.2.2.0:8123
+
+automation: !include automations.yaml
+script: !include scripts.yaml
+scene: !include scenes.yaml
+
+# Override home zome to have smaller radius
+zone:
+  - name: Home
+    latitude: !secret mt_latitude
+    longitude: !secret mt_longitude
+    radius: 15
+    icon: mdi:home
+
+notify:
+  - platform: telegram
+    name: tg_kidstrap_infra_notif
+    chat_id: !secret tg_id_kidstrap_infra_notif
+  - platform: telegram
+    name: tg_merichar
+    chat_id: !secret tg_id_merichar
+  - platform: telegram
+    name: tg_pnaseck
+    chat_id: !secret tg_id_pnaseck
+
+media_player:
+  - platform: emby
+    host: !secret emby_host
+    port: 443
+    ssl: true
+    api_key: !secret emby_api_key
+
+alexa:
+  smart_home:
+    locale: en-US
+    filter:
+       exclude_entity_globs:
+         - "*.*"
+    endpoint: https://api.amazonalexa.com/v3/events
+    client_id: !secret alexa_skill_messaging_client_id
+    client_secret: !secret alexa_skill_messaging_client_secret
+
+# BEGIN additional items
+# Everything above this is setup for an integration or integral part of how
+# Home Assistant works. Everythiung below this are additional template items
+# and automation helpers.
+
+zha:
+  device_config:
+    # Main Ensuite Fan Wall Switch
+    # Device ID: 00f29087d8c5ed9aa038588c0cf44882
+    c0:9b:9e:ff:fe:d1:22:53-1:
+      type: "switch"
+
+    # Pink Bathroom Fan Wall Switch
+    # Device ID: d6f6ada233058bc0b91a474a9550179a
+    18:0d:f9:ff:fe:34:4c:65-1:
+      type: "switch"
