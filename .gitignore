@@ -18,6 +18,7 @@ frigate.yml
 *.august.conf
 .ha_run.lock
 .cloud/
+.ps4*
 
 # Secrets
 secrets.yaml
