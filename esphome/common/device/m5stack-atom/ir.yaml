@@ -1,0 +1,4 @@
+remote_transmitter:
+  id: m5stack_atom_ir_transmitter
+  pin: GPIO12
+  carrier_duty_percent: 50%

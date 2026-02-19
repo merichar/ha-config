@@ -1,0 +1,261 @@
+# Full voice assistant with wake word detection, timer support, and LED feedback
+# Requires: i2s, mic, speaker, media-player modules
+# Button: short click dismisses timer or restarts wake word, 10s hold factory resets
+
+voice_assistant:
+  id: va
+  micro_wake_word:
+  microphone:
+    microphone: echo_microphone
+    channels: 0
+    gain_factor: 4
+  media_player: echo_media_player
+  noise_suppression_level: 2
+  auto_gain: 31dBFS
+  on_listening:
+    - light.turn_on:
+        id: led
+        blue: 100%
+        red: 0%
+        green: 0%
+        effect: "Slow Pulse"
+  on_stt_vad_end:
+    - light.turn_on:
+        id: led
+        blue: 100%
+        red: 0%
+        green: 0%
+        effect: "Fast Pulse"
+  on_tts_start:
+    - light.turn_on:
+        id: led
+        blue: 100%
+        red: 0%
+        green: 0%
+        brightness: 100%
+        effect: none
+  on_end:
+    - wait_until:
+        condition:
+          - media_player.is_announcing:
+        timeout: 0.5s
+    - if:
+        condition:
+          - lambda: |-
+              return id(wake_word_engine_location).current_option() == "On device";
+        then:
+          - wait_until:
+              - and:
+                  - not:
+                      voice_assistant.is_running:
+                  - not:
+                      speaker.is_playing:
+          - lambda: id(va).set_use_wake_word(false);
+          - micro_wake_word.start:
+    - script.execute: reset_led
+  on_error:
+    - light.turn_on:
+        id: led
+        red: 100%
+        green: 0%
+        blue: 0%
+        brightness: 100%
+        effect: none
+    - delay: 2s
+    - script.execute: reset_led
+  on_client_connected:
+    - delay: 2s
+    - script.execute: start_wake_word
+  on_client_disconnected:
+    - script.execute: stop_wake_word
+  on_timer_finished:
+    - script.execute: stop_wake_word
+    - wait_until:
+        not:
+          microphone.is_capturing:
+    - switch.turn_on: timer_ringing
+    - light.turn_on:
+        id: led
+        red: 0%
+        green: 100%
+        blue: 0%
+        brightness: 100%
+        effect: "Fast Pulse"
+    - wait_until:
+        - switch.is_off: timer_ringing
+    - light.turn_off: led
+    - switch.turn_off: timer_ringing
+
+# Button: dismiss timer or restart wake word, 10s hold factory reset
+binary_sensor:
+  - id: !extend atom_button
+    disabled_by_default: true
+    entity_category: diagnostic
+    on_multi_click:
+      - timing:
+          - ON for at least 50ms
+          - OFF for at least 50ms
+        then:
+          - if:
+              condition:
+                switch.is_on: timer_ringing
+              then:
+                - switch.turn_off: timer_ringing
+              else:
+                - script.execute: start_wake_word
+      - timing:
+          - ON for at least 10s
+        then:
+          - button.press: factory_reset_btn
+
+# Scripts
+script:
+  - id: reset_led
+    then:
+      - if:
+          condition:
+            - lambda: |-
+                return id(wake_word_engine_location).current_option() == "On device";
+            - switch.is_on: use_listen_light
+          then:
+            - light.turn_on:
+                id: led
+                red: 100%
+                green: 89%
+                blue: 71%
+                brightness: 60%
+                effect: none
+          else:
+            - if:
+                condition:
+                  - lambda: |-
+                      return id(wake_word_engine_location).current_option() == "On device";
+                  - switch.is_on: use_listen_light
+                then:
+                  - light.turn_on:
+                      id: led
+                      red: 0%
+                      green: 100%
+                      blue: 100%
+                      brightness: 60%
+                      effect: none
+                else:
+                  - light.turn_off: led
+  - id: start_wake_word
+    then:
+      - if:
+          condition:
+            and:
+              - not:
+                  - voice_assistant.is_running:
+              - lambda: |-
+                  return id(wake_word_engine_location).current_option() == "On device";
+          then:
+            - lambda: id(va).set_use_wake_word(false);
+            - micro_wake_word.start:
+      - if:
+          condition:
+            and:
+              - not:
+                  - voice_assistant.is_running:
+              - lambda: |-
+                  return id(wake_word_engine_location).current_option() == "In Home Assistant";
+          then:
+            - lambda: id(va).set_use_wake_word(true);
+            - voice_assistant.start_continuous:
+  - id: stop_wake_word
+    then:
+      - if:
+          condition:
+            lambda: |-
+                  return id(wake_word_engine_location).current_option() == "In Home Assistant";
+          then:
+            - lambda: id(va).set_use_wake_word(false);
+            - voice_assistant.stop:
+      - if:
+          condition:
+            lambda: |-
+              return id(wake_word_engine_location).current_option() == "On device";
+          then:
+            - micro_wake_word.stop:
+
+# Switches
+switch:
+  - platform: template
+    name: "Use Listen Light"
+    id: use_listen_light
+    optimistic: true
+    restore_mode: RESTORE_DEFAULT_ON
+    entity_category: config
+    on_turn_on:
+      - script.execute: reset_led
+    on_turn_off:
+      - script.execute: reset_led
+  - platform: template
+    id: timer_ringing
+    optimistic: true
+    restore_mode: ALWAYS_OFF
+    on_turn_off:
+      - lambda: |-
+              id(echo_media_player)
+                ->make_call()
+                .set_command(media_player::MediaPlayerCommand::MEDIA_PLAYER_COMMAND_REPEAT_OFF)
+                .set_announcement(true)
+                .perform();
+              id(echo_media_player)->set_playlist_delay_ms(speaker::AudioPipelineType::ANNOUNCEMENT, 0);
+      - media_player.stop:
+          announcement: true
+    on_turn_on:
+      - lambda: |-
+            id(echo_media_player)
+              ->make_call()
+              .set_command(media_player::MediaPlayerCommand::MEDIA_PLAYER_COMMAND_REPEAT_ONE)
+              .set_announcement(true)
+              .perform();
+            id(echo_media_player)->set_playlist_delay_ms(speaker::AudioPipelineType::ANNOUNCEMENT, 1000);
+      - media_player.speaker.play_on_device_media_file:
+          media_file: timer_finished_wave_file
+          announcement: true
+      - delay: 15min
+      - switch.turn_off: timer_ringing
+
+# Wake word engine selector
+select:
+  - platform: template
+    entity_category: config
+    name: "Wake Word Engine Location"
+    id: wake_word_engine_location
+    optimistic: true
+    restore_value: true
+    options:
+      - In Home Assistant
+      - On device
+    initial_option: On device
+    on_value:
+      - if:
+          condition:
+            lambda: return x == "In Home Assistant";
+          then:
+            - micro_wake_word.stop:
+            - delay: 500ms
+            - lambda: id(va).set_use_wake_word(true);
+            - voice_assistant.start_continuous:
+      - if:
+          condition:
+            lambda: return x == "On device";
+          then:
+            - lambda: id(va).set_use_wake_word(false);
+            - voice_assistant.stop:
+            - delay: 500ms
+            - micro_wake_word.start:
+
+# Wake word models
+micro_wake_word:
+  on_wake_word_detected:
+    - voice_assistant.start:
+        wake_word: !lambda return wake_word;
+  vad:
+  models:
+    - model: okay_nabu
+    - model: hey_mycroft
+    - model: hey_jarvis

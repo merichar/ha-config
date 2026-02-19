@@ -1,0 +1,64 @@
+binary_sensor:
+  - platform: gpio
+    pin:
+      number: GPIO39
+      inverted: true
+    name: "Button"
+    filters:
+      - delayed_on: 10ms
+    on_multi_click:
+      - timing:
+          - ON for at least 351ms
+        then:
+          - script.execute: ${m5stack_atom_button_KeyHeldDown_script}
+          - homeassistant.event:
+              event: esphome.button_pressed
+              data:
+                button: m5stack-atom_button
+                value: KeyHeldDown
+      - timing:
+          - ON for at least 351ms
+          - OFF for at least 0ms
+        then:
+          - script.execute: ${m5stack_atom_button_KeyReleased_script}
+          - homeassistant.event:
+              event: esphome.button_pressed
+              data:
+                button: m5stack-atom_button
+                value: KeyReleased
+      - timing:
+          - ON for 50ms to 350ms
+          - OFF for at least 351ms
+        then:
+          - script.execute: ${m5stack_atom_button_KeyPressed_script}
+          - homeassistant.event:
+              event: esphome.button_pressed
+              data:
+                button: m5stack-atom_button
+                value: KeyPressed
+      - timing:
+          - ON for 50ms to 350ms
+          - OFF for 50ms to 350ms
+          - ON for 50ms to 350ms
+          - OFF for at least 351ms
+        then:
+          - script.execute: ${m5stack_atom_button_KeyPressed2x_script}
+          - homeassistant.event:
+              event: esphome.button_pressed
+              data:
+                button: m5stack-atom_button
+                value: KeyPressed2x
+      - timing:
+          - ON for 50ms to 350ms
+          - OFF for 50ms to 350ms
+          - ON for 50ms to 350ms
+          - OFF for 50ms to 350ms
+          - ON for 50ms to 350ms
+          - OFF for at least 351ms
+        then:
+          - script.execute: ${m5stack_atom_button_KeyPressed3x_script}
+          - homeassistant.event:
+              event: esphome.button_pressed
+              data:
+                button: m5stack-atom_button
+                value: KeyPressed3x

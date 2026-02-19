@@ -1,0 +1,9 @@
+binary_sensor:
+  - platform: gpio
+    id: atom_button
+    pin:
+      number: GPIO39
+      inverted: true
+    name: "Built-in Button"
+    filters:
+      - delayed_on: 10ms
