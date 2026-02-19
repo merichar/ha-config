@@ -1,0 +1,42 @@
+substitutions:
+  name: "family-room-tetris-switch"
+  friendly_name: "Family Room Tetris Switch"
+  mac_address: !secret mac_address_family_room_tetris_switch
+  ip_address: "10.2.2.11"
+
+packages:
+  common: !include ./common/base.yaml
+  net_wifi: !include ./common/net/wifi.yaml
+  device: !include ./common/device/m5stack-atom/profiles/echo.yaml
+  voice: !include ./common/device/m5stack-atom/voice-assistant-ptt.yaml
+
+esphome:
+  name: "${name}"
+  friendly_name: "${friendly_name}"
+
+api:
+  encryption:
+    key: !secret api_key_family_room_tetris_switch
+
+ota:
+  - platform: esphome
+    password: !secret ota_password_family_room_tetris_switch
+
+# Button
+binary_sensor:
+  - id: !extend atom_button
+    on_press:
+      - voice_assistant.start:
+    on_release:
+      - voice_assistant.stop:
+
+# Switch
+  - platform: gpio
+    pin:
+      number: GPIO32
+      mode: INPUT_PULLUP
+      inverted: true
+    name: None
+    filters:
+      - delayed_on: 10ms
+      - delayed_off: 10ms
