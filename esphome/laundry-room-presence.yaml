@@ -1,0 +1,33 @@
+substitutions:
+  name: "laundry-room-presence"
+  friendly_name: "Laundry Room Presence"
+  mac_address: !secret mac_address_laundry_room_presence
+  ip_address: "10.2.2.12"
+
+packages:
+  common: !include ./common/base.yaml
+  net_wifi: !include ./common/net/wifi.yaml
+  device: !include ./common/device/m5stack-atom/base.yaml
+  button: !include ./common/device/m5stack-atom/button-simple.yaml
+
+esphome:
+  name: "${name}"
+  friendly_name: "${friendly_name}"
+
+api:
+  encryption:
+    key: !secret api_key_laundry_room_presence
+
+ota:
+  - platform: esphome
+    password: !secret ota_password_laundry_room_presence
+
+# PIR Motion Sensor
+binary_sensor:
+  - platform: gpio
+    pin: GPIO32
+    name: "Motion"
+    device_class: motion
+    filters:
+      - delayed_on: 10ms
+      - delayed_off: 10ms
