@@ -1,0 +1,58 @@
+substitutions:
+  name: "family-room-soundbar-control"
+  friendly_name: "Family Room Soundbar Control"
+  mac_address: !secret mac_address_family_room_soundbar_control
+  ip_address: "10.2.2.13"
+
+packages:
+  common: !include ./common/base.yaml
+  net_wifi: !include ./common/net/wifi.yaml
+  device: !include ./common/device/m5stack-atom-s3/profiles/lite.yaml
+
+esphome:
+  name: "${name}"
+  friendly_name: "${friendly_name}"
+
+api:
+  encryption:
+    key: !secret api_key_family_room_soundbar_control
+
+ota:
+  - platform: esphome
+    password: !secret ota_password_family_room_soundbar_control
+
+button:
+  - platform: template
+    name: "Power Toggle"
+    on_press:
+      - remote_transmitter.transmit_nec:
+          address: 0x8778
+          command: 0xCC
+
+  - platform: template
+    name: "Volume Up"
+    on_press:
+      - remote_transmitter.transmit_nec:
+          address: 0x8778
+          command: 0x1E
+
+  - platform: template
+    name: "Volume Down"
+    on_press:
+      - remote_transmitter.transmit_nec:
+          address: 0x8778
+          command: 0x1F
+
+  - platform: template
+    name: "Mute"
+    on_press:
+      - remote_transmitter.transmit_nec:
+          address: 0x8778
+          command: 0x9C
+
+binary_sensor:
+  - id: !extend atom_s3_button
+    on_press:
+      - remote_transmitter.transmit_nec:
+          address: 0x8778
+          command: 0xCC

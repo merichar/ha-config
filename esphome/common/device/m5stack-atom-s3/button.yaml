@@ -1,0 +1,10 @@
+binary_sensor:
+  - platform: gpio
+    id: atom_s3_button
+    pin:
+      number: GPIO41
+      mode: INPUT_PULLUP
+      inverted: true
+    name: "Built-in Button"
+    filters:
+      - delayed_on: 10ms

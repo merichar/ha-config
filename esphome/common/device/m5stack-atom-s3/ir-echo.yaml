@@ -1,0 +1,4 @@
+remote_transmitter:
+  id: ir_transmitter
+  pin: GPIO47
+  carrier_duty_percent: 50%
