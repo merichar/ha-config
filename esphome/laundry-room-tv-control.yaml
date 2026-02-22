@@ -7,9 +7,8 @@ substitutions:
 packages:
   common: !include ./common/base.yaml
   net_wifi: !include ./common/net/wifi.yaml
-  device: !include ./common/device/m5stack-atom/base.yaml
-  button: !include ./common/device/m5stack-atom/button-simple.yaml
-  ir: !include ./common/device/m5stack-atom/ir.yaml
+  device: !include ./common/device/m5stack-atom/profiles/echo.yaml
+  voice: !include ./common/device/m5stack-atom/voice-assistant-ptt.yaml
 
 esphome:
   name: "${name}"
@@ -75,5 +74,6 @@ button:
 binary_sensor:
   - id: !extend atom_button
     on_press:
-      - remote_transmitter.transmit_samsung:
-          data: 0xE0E040BF
+      - voice_assistant.start:
+    on_release:
+      - voice_assistant.stop:

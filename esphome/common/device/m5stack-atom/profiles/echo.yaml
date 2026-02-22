@@ -1,6 +1,7 @@
 packages:
   base: !include ../base.yaml
   button: !include ../button-simple.yaml
+  ir: !include ../ir.yaml
   i2s: !include ../i2s.yaml
   mic: !include ../mic.yaml
   speaker: !include ../speaker.yaml
