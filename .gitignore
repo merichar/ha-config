@@ -23,5 +23,8 @@ frigate.yml
 # Secrets
 secrets.yaml
 
+# ESPHome build cache
+esphome/.esphome/
+
 # OS
 .DS_Store
