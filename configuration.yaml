@@ -11,7 +11,7 @@ http:
     - 10.1.1.2
   ip_ban_enabled: true
   login_attempts_threshold: 5
-  cors_allowed_origins: 
+  cors_allowed_origins:
     - https://hass.par.bar:65415
     - https://hass.par.bar
     - http://10.2.2.0:8123
@@ -50,8 +50,8 @@ alexa:
   smart_home:
     locale: en-US
     filter:
-       exclude_entity_globs:
-         - "*.*"
+      exclude_entity_globs:
+        - "*.*"
     endpoint: https://api.amazonalexa.com/v3/events
     client_id: !secret alexa_skill_messaging_client_id
     client_secret: !secret alexa_skill_messaging_client_secret

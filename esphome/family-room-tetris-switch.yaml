@@ -22,15 +22,16 @@ ota:
   - platform: esphome
     password: !secret ota_password_family_room_tetris_switch
 
-# Button
 binary_sensor:
+
+  # Button
   - id: !extend atom_button
     on_press:
       - voice_assistant.start:
     on_release:
       - voice_assistant.stop:
 
-# Switch
+  # Rotary Switch
   - platform: gpio
     pin:
       number: GPIO32

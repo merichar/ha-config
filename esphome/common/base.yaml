@@ -5,7 +5,7 @@ time:
     id: sntp_time
     timezone: !secret ntp_timezone
     servers:
-    - !secret ntp_address
+      - !secret ntp_address
 
 binary_sensor:
   - platform: status
