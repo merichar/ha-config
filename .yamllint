@@ -1,10 +1,7 @@
 extends: default
 ignore-from-file: .gitignore
 rules:
-  braces:
-    min-spaces-inside: 1
-    max-spaces-inside: 1
-    min-spaces-inside-empty: 0
   document-start: disable
   line-length: disable
-  truthy: disable
+  truthy:
+    check-keys: false
