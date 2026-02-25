@@ -57,10 +57,10 @@ repeat:
 ```yaml
 keyfile: privkey.pem
 certfile: fullchain.pem
-challenge: dns            # chosen
+challenge: dns             # chosen
 dns:
-  provider: dns-cloudflare          # chosen
-  cloudflare_api_token: "..."       # secret
+  provider: dns-cloudflare                           # chosen
+  cloudflare_api_token: "YOUR_CLOUDFLARE_API_TOKEN"  # secret
 domains:
   - "*.par.bar"           # chosen
 email: webmaster@par.bar  # chosen
@@ -75,7 +75,7 @@ databases:
   - homeassistant
 logins:
   - username: homeassistant
-    password: "..."        # secret
+    password: "YOUR_PASSWORD"  # secret
 rights:
   - username: homeassistant
     database: homeassistant

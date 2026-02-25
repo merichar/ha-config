@@ -26,26 +26,26 @@ M5Stack Atom Echo. IR blaster for Samsung TV. Power, volume, etc. Push-to-talk v
 │   │   └── ethernet.yaml      # Ethernet connectivity
 │   └── device/
 │       └── m5stack-atom/
-│           ├── base.yaml              # Board, LED, internal temp
-│           ├── button-simple.yaml     # Single-click button (GPIO39)
-│           ├── button-multi.yaml      # Multi-click button (GPIO39)
-│           ├── i2s.yaml               # I2S audio bus (GPIO33/19)
-│           ├── mic.yaml               # I2S microphone (GPIO23)
-│           ├── speaker.yaml           # I2S speaker (GPIO22)
-│           ├── media-player.yaml      # Speaker-based media player
-│           ├── ir.yaml                # IR transmitter (GPIO12)
-│           ├── i2c-grove.yaml         # I2C Grove connector (GPIO26/32)
-│           ├── voice-assistant-ptt.yaml      # Push-to-talk voice assistant
-│           ├── voice-assistant-wakeword.yaml # Wake word voice assistant
+│           ├── base.yaml                      # Board, LED, internal temp
+│           ├── button-simple.yaml             # Single-click button (GPIO39)
+│           ├── button-multi.yaml              # Multi-click button (GPIO39)
+│           ├── i2s.yaml                       # I2S audio bus (GPIO33/19)
+│           ├── mic.yaml                       # I2S microphone (GPIO23)
+│           ├── speaker.yaml                   # I2S speaker (GPIO22)
+│           ├── media-player.yaml              # Speaker-based media player
+│           ├── ir.yaml                        # IR transmitter (GPIO12)
+│           ├── i2c-grove.yaml                 # I2C Grove connector (GPIO26/32)
+│           ├── voice-assistant-ptt.yaml       # Push-to-talk voice assistant
+│           ├── voice-assistant-wakeword.yaml  # Wake word voice assistant
 │           └── profiles/
 │               ├── echo.yaml          # Atom Echo profile (base, button, audio)
 │               └── lite.yaml          # Atom Lite profile (base, button, IR, I2C)
 │       └── m5stack-atom-s3/
-│           ├── base.yaml              # Board, internal temp (ESP32-S3)
-│           ├── button.yaml            # Built-in button (GPIO41)
-│           ├── neopixel.yaml          # RGB LED (GPIO35, S3 Lite only)
-│           ├── ir-lite.yaml           # IR transmitter (GPIO4, S3 Lite)
-│           ├── ir-echo.yaml           # IR transmitter (GPIO47, S3 Echo)
+│           ├── base.yaml                      # Board, internal temp (ESP32-S3)
+│           ├── button.yaml                    # Built-in button (GPIO41)
+│           ├── neopixel.yaml                  # RGB LED (GPIO35, S3 Lite only)
+│           ├── ir-lite.yaml                   # IR transmitter (GPIO4, S3 Lite)
+│           ├── ir-echo.yaml                   # IR transmitter (GPIO47, S3 Echo)
 │           └── profiles/
 │               ├── lite.yaml          # S3 Lite profile (base, neopixel, button, IR)
 │               └── echo.yaml          # S3 Echo profile (base, button, IR)
@@ -84,7 +84,7 @@ Two GitHub Actions jobs run on push to `main` and on pull requests targeting `es
 
 ## Adding a New Device
 
-1. Create `<device-name>.yaml` in the root
+1. Create `DEVICE_NAME.yaml` in the root
 2. Add device secrets to `secrets.yaml`
 3. Add placeholder secrets to `ci/secrets/<device-name>.yaml`
 4. Include shared packages as needed
@@ -130,8 +130,8 @@ binary_sensor:
 **`secrets.yaml`** (add entries):
 ```yaml
 mac_address_meg_office_presence: "aa:bb:cc:dd:ee:ff"
-api_key_meg_office_presence: "nachos"
-ota_password_meg_office_presence: "nachos"
+api_key_meg_office_presence: "YOUR_API_KEY"
+ota_password_meg_office_presence: "YOUR_OTA_PASSWORD"
 ```
 
 **`ci/secrets/meg-office-presence.yaml`** (placeholder values):
